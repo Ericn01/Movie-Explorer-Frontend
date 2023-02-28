@@ -3,16 +3,23 @@ import { Link } from 'react-router-dom';
 const DefaultView = ({homeMatches, favorites, addFavorite, movieDetails, genres, setParentMovieMatches, movieData, removeFavoriteMovie}) => {
     const [filterIsShown, setFilterIsShown] = useState(true);
     const [favoritesIsShown, setFavoriteIsShown] = useState(true);
-    function setSectionDisplay(sectionName){
+    const [rightSideArrowDirection, setRightSideArrowDirection] = useState(true);
+    const [leftSideArrowDirection, setLeftSideArrowDirection] = useState(false);
+    function setSectionDisplay(sectionName, id){
         sectionName === 'filter' ? setFilterIsShown(!filterIsShown) : setFavoriteIsShown(!favoritesIsShown);
+        if (id === 'right'){
+            setRightSideArrowDirection(!rightSideArrowDirection)
+        } else if (id === 'left'){
+            setLeftSideArrowDirection(!leftSideArrowDirection);
+        }
     }
     return (
         <section className="flex justify-around mt-10">
             <MovieFilter genresList={genres} movieData={movieData} setFilterResults={setParentMovieMatches} filterIsShown={filterIsShown}/>
-            <ShowSection initialDireciton={'left'} section={"filter"} setSectionDisplay={setSectionDisplay} />
+            <ShowSection direction={leftSideArrowDirection} section={"filter"} setSectionDisplay={setSectionDisplay} id={"left"}/>
             <MovieMatches matches={homeMatches} favoriteMovies={favorites} addFavorite={addFavorite} setMovieDetails={movieDetails} setSortedMatches={setParentMovieMatches} />
-            <ShowSection initialDireciton={'right'} section={'favorites'} setSectionDisplay={setSectionDisplay} />
-            <Favorites favoriteMovies={favorites} removeFavoriteMovie={removeFavoriteMovie} favoritesIsShown={favoritesIsShown}/>
+            <ShowSection direction={rightSideArrowDirection} section={'favorites'} setSectionDisplay={setSectionDisplay} id={"right"}/>
+            <Favorites favoriteMovies={favorites} removeFavoriteMovie={removeFavoriteMovie} favoritesIsShown={favoritesIsShown} />
         </section>
     );
 }
@@ -281,19 +288,23 @@ const Favorites = (props) => {
     }
 }
 // ======================================================== HIDE / DISPLAY SECTION =============================================================
-const ShowSection = ({initialDireciton, section, setSectionDisplay}) => {
-    const [direction, setDirection] = useState(initialDireciton);
-    if (direction === 'right'){
+const ShowSection = ({direction, section, setSectionDisplay, id}) => {
+    if (direction === true){
         return (
-            <div className='h-full bg-gray-400'>
-                <p className='cursor-pointer' onClick={() => setSectionDisplay(section)}> ▶ </p>
+            <div className='flex align-center mr-5'>
+                <img src="src/assets/arrow-right.svg" width={"54px"} className='cursor-pointer' onClick={() => setSectionDisplay(section, id)}/>
             </div>
         );
     }
-    return (
-        <div className='h-full bg-gray-400 flex align-center'>
-            <p className='cursor-pointer' onClick={() => setSectionDisplay(section)}> ◀ </p>
-        </div>
-    )
+    else if (direction === false){
+        return (
+            <div className='flex align-center ml-5'>
+                <img src="src/assets/arrow-left.svg" width={"54px"} className='cursor-pointer' onClick={() => setSectionDisplay(section, id)}/>
+            </div>
+        );
+    }
+    else {
+        console.log("This code should be impossible to reach");
+    }
 }
 export default DefaultView;

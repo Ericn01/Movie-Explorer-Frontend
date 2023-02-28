@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 const DetailView = ({movieRequest, favorites, addFavorite}) => {
+    const backdropURL = `https://image.tmdb.org/t/p/original${movieRequest.backdrop}`;
+    console.log(backdropURL)
     if (movieRequest !== null) {
         return (
-            <section className="flex justify-evenly">
+            <section className={`flex justify-evenly bg-cover bg-no-repeat bg-[url('${backdropURL}')] items-center`}>
                 <PosterImage posterPath={movieRequest.poster} />
                 <MovieDetails movieData={movieRequest}/>
                 <div>
@@ -26,8 +28,8 @@ const PosterImage = ({posterPath}) => {
         alert("image click");
     }
     return (
-        <div className="drop-shadow-2xl cursor-pointer hover:shadow-xl">
-            <img src={largePosterImage} alt="Movie Poster" width={"350px"} draggable="false" onClick={handleImageClick} />
+        <div className="drop-shadow-2xl cursor-pointer hover:shadow-xl mt-10">
+            <img className="min-w-full" src={largePosterImage} width={"400px"} alt="Movie Poster" draggable="false" onClick={handleImageClick} />
         </div>
     );
 }
@@ -38,15 +40,15 @@ const PosterImage = ({posterPath}) => {
  */
 const MovieDetails = ({movieData}) => {
     return (
-        <div className="px-5 py-3">
+        <div className="px-5 py-3 ml-5">
             <h2 className="text-3xl font-bold pb-3"> {movieData.title} ({movieData.release_date.substring(0,4)})</h2>
-            <h3 className="text-xl italic pb-2"> {movieData.tagline} </h3>
+            <h3 className="text-lg italic pb-2"> {movieData.tagline} </h3>
             <ul className="flex list-none justify-start"> 
-                <li> {movieData.release_date} </li>
-                {movieData.details.genres.map((genreObj) => <li key={genreObj.id} className="ml-3">
+                <li className='my-4'> {movieData.release_date} </li>
+                {movieData.details.genres.map((genreObj) => <li className="ml-3 inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-600" key={genreObj.id}>
                     {genreObj.name} 
                 </li>)}
-                <li className="ml-3"> {movieData.runtime} Minutes </li>
+                <li className="ml-3 my-4"> {movieData.runtime} Minutes </li>
             </ul>
             <div> 
                 <h3> Find More Information At: </h3>
@@ -56,8 +58,8 @@ const MovieDetails = ({movieData}) => {
                 </div>
             </div>
             <div> 
-                <h3> Description </h3>
-                <p> {movieData.details.overview} </p>
+                <h3 className={"text-lg font-semibold mb-2"}> Description </h3>
+                <p className='text-sm'> {movieData.details.overview} </p>
             </div>
         </div>
     )
@@ -72,7 +74,7 @@ const PerformanceDetails = ({movieData}) => {
     const movieRevenue = new Intl.NumberFormat('en-us', {style: 'currency', currency: "USD"}).format(movieData.revenue);
     return (
         <div> 
-            <h3> Movie Performance </h3>
+            <h3 className='text-md font-semibold'> Performance Details </h3>
             <article>
                 <p> Revenue: {movieRevenue}</p>
                 <p> Average Rating: {ratingDetails.average}</p>
@@ -99,18 +101,23 @@ const ActionButtons = ({favoriteMovies, addFavorite, movieData}) => {
 
 const UserRating = () => {
     const [userRating, setUserRating] = useState(new Array(10).fill(0));
-    function setRating(rating){
+    function setRating(){
+        const inputValue = e.target.value;
+        const rating = inputValue != "" ? Number(e.target.value) : 0;
+        setUserRating(rating);
+    }
+    function applyRating (){
 
     }
     return (
         <section>
             <h2> User Rating: </h2>
             <div>
-                <input type="number" value={0} max={10} min={0}/>
+                <input type="number" value={0} max={10} min={0} onChange={setRating} />
                 <button onClick={() => setRating()}> Change Rating </button>
             </div>
             <div className="flex">
-                {userRating.map((indexRating, index) => <StarImage key={index} imageIndex={index} indexRating={indexRating} setRatingBasedOnIndex={setRatingBasedOnIndex}/>)}
+                {userRating.map((indexRating, index) => <StarImage key={index} imageIndex={index} indexRating={indexRating} />)}
             </div>
         </section>
     )

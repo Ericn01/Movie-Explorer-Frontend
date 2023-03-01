@@ -16,9 +16,10 @@ const HomeView = ({movieData, setParentMovieMatches}) => {
         }
     }
     return (
-    <div className='relative h-screen bg-[url("images/hero.jpg")] bg-gray-700'>
+    <div className='relative h-screen bg-gray-700'>
+        <img src="images/hero.jpg" className='w-full h-full object-cover absolute z-0' draggable={false} />
         <section className="flex justify-center items-center bg-opacity-50 h-screen">
-            <div className="p-10 bg-slate-100 border border-gray-200 rounded-xl shadow-xl h-min ">
+            <div className="p-10 bg-gray-100 border border-gray-200 rounded-xl shadow-xl h-min z-10">
                 <h1 className="font-semibold tracking-tight text-gray-900 text-2xl text-center"> Movie Explorer </h1>
                 <h3 className='italic text-lg font-md mt-3 tracking-tight text-center
             '> Find All of Your Favorite Movies! </h3>
@@ -42,7 +43,7 @@ const HomeView = ({movieData, setParentMovieMatches}) => {
                 </div>
             </div>
         </section>
-        <div className="text-gray-200 font-semibold tracking-wide text-xl absolute bottom-2 right-[40%]"> Photo Credits to <a href="https://www.pexels.com/photo/spiral-film-strip-65128/" className='text-blue-500'>Pietro Jeng (Pexels) </a> </div>
+        <div className="text-gray-700 font-semibold tracking-tight text-xl absolute bottom-2 right-[40%]"> Photo Credits to <a href="https://www.pexels.com/photo/spiral-film-strip-65128/" className='text-blue-500'>Pietro Jeng (Pexels) </a> </div>
     </div>
     );
 }

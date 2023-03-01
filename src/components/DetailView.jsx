@@ -153,7 +153,7 @@ const UserRating = () => {
 }
 const StarImage =  ({indexRating}) => {
     return (
-        <img className="hover:cursor-pointer" src={`src/images/star-${indexRating}.svg`} width={"26px"} draggable={false}/>
+        <img className="hover:cursor-pointer" src={`public/assets/images/star-${indexRating}.svg`} width={"26px"} draggable={false}/>
     )
 }
 
@@ -167,6 +167,6 @@ function makeArrayBasedOnRating(rating){
 function minutesToHours(duration) {
     const hours = Math.floor(duration / 60);
     const minutes = duration % 60;
-    return `${hours}h ${minutes}m`
+return `${hours}h ${minutes}m`
 }
 export default DetailView;

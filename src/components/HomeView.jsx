@@ -16,7 +16,7 @@ const HomeView = ({movieData, setParentMovieMatches}) => {
         }
     }
     return (
-        <section className="flex justify-center items-center h-screen bg-[url('public/assets/images/hero-img.jpg')] bg-opacity-50">
+        <section className="flex justify-center items-center h-screen bg-[url('dist/images/hero-img.jpg')] bg-opacity-50">
             <div className="p-10 bg-slate-100 border border-gray-200 rounded-xl shadow-xl h-min ">
                 <h1 className="font-semibold tracking-tight text-gray-900 text-2xl text-center"> Movie Explorer </h1>
                 <h3 className='italic text-lg font-md mt-3 tracking-tight text-center
@@ -24,7 +24,7 @@ const HomeView = ({movieData, setParentMovieMatches}) => {
                 <div className="flex-auto my-7"> 
                     <div className='relative'>
                         <div className="absolute top-2 left-2">
-                            <img src="public/assets/images/search.png" width={"24px"} draggable={false}/>
+                            <img src="images/search.png" width={"24px"} draggable={false}/>
                         </div>
                         <input type="text" id="movie-input" name="movie-input" autoComplete={"off"} placeholder="Enter a movie title..." className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 " onChange={(e) => setMovieNameInput(e.target.value)}></input>
                     </div>

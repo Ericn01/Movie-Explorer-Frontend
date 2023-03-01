@@ -153,7 +153,7 @@ const UserRating = () => {
 }
 const StarImage =  ({indexRating}) => {
     return (
-        <img className="hover:cursor-pointer" src={`public/assets/images/star-${indexRating}.svg`} width={"26px"} draggable={false}/>
+        <img className="hover:cursor-pointer" src={`images/star-${indexRating}.svg`} width={"26px"} draggable={false}/>
     )
 }
 

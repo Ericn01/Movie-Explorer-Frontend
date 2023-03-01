@@ -67,7 +67,7 @@ function App() {
       genres === undefined ? getGenresList(movies) : getGenresList(JSON.parse(movieData)); 
     }, []);
   return (
-  <main className='px-8'>
+  <main>
     <Header />
     <Routes>
       <Route path="/" element={<HomeView movieData={movies} setParentMovieMatches={setMatches}/>} />

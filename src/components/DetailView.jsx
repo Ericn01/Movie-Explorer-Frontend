@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 const DetailView = ({movieRequest, favorites, addFavorite}) => {
     const backdropURL = `https://image.tmdb.org/t/p/original${movieRequest.backdrop}`;
-    console.log(backdropURL)
     if (movieRequest !== null) {
         return (
-            <section className={`flex justify-evenly bg-cover bg-no-repeat bg-[url('${backdropURL}')] items-center`}>
+            <section className={`flex justify-evenly bg-cover bg-no-repeat bg-[url(${backdropURL})] items-center m-10`}>
                 <PosterImage posterPath={movieRequest.poster} />
                 <MovieDetails movieData={movieRequest}/>
                 <div>
@@ -28,7 +27,7 @@ const PosterImage = ({posterPath}) => {
         alert("image click");
     }
     return (
-        <div className="drop-shadow-2xl cursor-pointer hover:shadow-xl mt-10">
+        <div className="cursor-pointer hover:shadow-xl mt-10 h-max min-h-[100%]">
             <img className="min-w-full" src={largePosterImage} width={"400px"} alt="Movie Poster" draggable="false" onClick={handleImageClick} />
         </div>
     );
@@ -41,18 +40,32 @@ const PosterImage = ({posterPath}) => {
 const MovieDetails = ({movieData}) => {
     return (
         <div className="px-5 py-3 ml-5">
+            <HeaderDetails movieData={movieData} />
+            <OtherDetails movieData={movieData} />
+        </div>
+    )
+}
+const HeaderDetails = ({movieData}) => {
+    return(
+        <div>
             <h2 className="text-3xl font-bold pb-3"> {movieData.title} ({movieData.release_date.substring(0,4)})</h2>
-            <h3 className="text-lg italic pb-2"> {movieData.tagline} </h3>
             <ul className="flex list-none justify-start"> 
-                <li className='my-4'> {movieData.release_date} </li>
+                <li className='my-4'> {movieData.release_date.replaceAll("-", "/")} </li>
                 {movieData.details.genres.map((genreObj) => <li className="ml-3 inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-600" key={genreObj.id}>
                     {genreObj.name} 
                 </li>)}
                 <li className="ml-3 my-4"> {movieData.runtime} Minutes </li>
             </ul>
+        </div>
+    );
+}
+const OtherDetails = ({movieData}) => {
+    return (
+        <div>
+            <h3 className="text-lg italic pb-2 text-gray-900"> {movieData.tagline} </h3>
             <div> 
                 <h3> Find More Information At: </h3>
-                <div className="flex"> 
+                <div className="flex my-3"> 
                     <a href={`https://www.imdb.com/title/${movieData.imdb_id}`} className="text-blue-600 hover:cursor-pointer hover:underline"> IMDB </a>
                     <a href={`https://www.themoviedb.org/movie/${movieData.tmdb_id}`} className="ml-5 text-blue-600 hover:cursor-pointer hover:underline"> TMDB </a>
                 </div>

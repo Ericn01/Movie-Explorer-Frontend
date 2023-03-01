@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
-
-const DefaultView = ({homeMatches, favorites, addFavorite, movieDetails, genres, setParentMovieMatches, movieData, removeFavoriteMovie}) => {
+/* Container for the entire default view */
+const DefaultView = ({homeMatches, favorites, addFavorite, movieDetails, genres, setParentMovieMatches, movieData, removeFavoriteMovie, setModalView}) => {
     const [filterIsShown, setFilterIsShown] = useState(true);
     const [favoritesIsShown, setFavoriteIsShown] = useState(true);
     const [rightSideArrowDirection, setRightSideArrowDirection] = useState(true);
@@ -17,19 +17,20 @@ const DefaultView = ({homeMatches, favorites, addFavorite, movieDetails, genres,
     }
     return (
         <div>
-            <Header />
-            <section className="flex justify-between m-10">
+            <Header setModalView={setModalView}/>
+            <section className="flex justify-between m-12">
                 <MovieFilter genresList={genres} movieData={movieData} setFilterResults={setParentMovieMatches} filterIsShown={filterIsShown}/>
                 <ShowSection direction={leftSideArrowDirection} section={"filter"} setSectionDisplay={setSectionDisplay} id={"left"}/>
                 <MovieMatches matches={homeMatches} favoriteMovies={favorites} addFavorite={addFavorite} setMovieDetails={movieDetails} setSortedMatches={setParentMovieMatches} />
                 <ShowSection direction={rightSideArrowDirection} section={'favorites'} setSectionDisplay={setSectionDisplay} id={"right"}/>
-                <Favorites favoriteMovies={favorites} removeFavoriteMovie={removeFavoriteMovie} favoritesIsShown={favoritesIsShown} />
+                <Favorites favoriteMovies={favorites} removeFavoriteMovie={removeFavoriteMovie} favoritesIsShown={favoritesIsShown} setMovieDetails={movieDetails} />
             </section>
         </div>
     );
 }
 
 // -------------------------------------------------------------- FILTERS SECTION ---------------------------------------------------------------------------------------------
+/* The Movie filter allows the user to display certain results depending on their search criteria */
 const MovieFilter = ({genresList, movieData, setFilterResults, filterIsShown}) => {
         const [checkedFilter, setCheckedFilter] = useState("");
         const [lessGreaterFilter, setLessGreaterFilter] = useState(""); // Holds the radio values for the less and greater than buttons
@@ -108,8 +109,8 @@ const MovieFilter = ({genresList, movieData, setFilterResults, filterIsShown}) =
                     <button className="w-[135px] text-white font-medium flex justify-center p-2 border  rounded-md shadow-sm text-sm bg-red-500 hover:bg-red-700" onClick={() => setFormData({title: "",genre: "",yearLess: "",yearGreater: "",ratingLess: "",ratingGreater: ""})} > Clear </button>
                 </div>
             </section>
-        )
-}
+        );
+    }
 // Creating Containers For Every Filter Type
 // 1. Title filter container (text input)
 const TitleFilterContainer = (props) => {
@@ -160,6 +161,7 @@ const DoubleValueFilterContainer = (props) => {
 }
 
 // ---------------------------------------------------------------- MATCHES SECTION ------------------------------------------------------------------------------------------
+/* Movie Row component */
 const MovieRow = (props) => {
     const posterPath = `https://image.tmdb.org/t/p/w92${props.movieData.poster}`;
     const releaseYear = props.movieData.release_date.substring(0,4); // The first 4 chars of the release date are the year.
@@ -173,14 +175,15 @@ const MovieRow = (props) => {
             <td className="px-3 text-[16px] font-semibold text-blue-600 hover:cursor-pointer hover:underline" onClick={() => props.setMovieDetails(props.movieData)}> 
             <Link to="/details"> {props.movieData.title} </Link> </td>
             <td className="px-3" > {releaseYear} </td>
-            <td className="px-3"> {ratings.average} </td>
-            <td className="px-3"> {Math.round(ratings.popularity, 2)}% </td>
+            <td className="px-3"> {ratings.average.toPrecision(2)} </td>
+            <td className="px-3"> {Math.round(ratings.popularity)}% </td>
             <td className="px-3"> <button onClick={() => props.addFavorite(props.movieData)}> <FavoriteMovie isFavorite={isFavorite} /> </button> </td>
             <td className="px-3"> <button className="text-green-800 text-sm font-semibold bg-green-300 rounded-lg py-1 px-2 uppercase" onClick={() => props.setMovieDetails(props.movieData)}> 
             <Link to="/details"> View </Link> </button> </td>
         </tr>
     )
 }
+/* Favorite movie logic (heart or not) in the table*/
 const FavoriteMovie = ({isFavorite}) => {
     if (isFavorite){
         return  (
@@ -191,6 +194,7 @@ const FavoriteMovie = ({isFavorite}) => {
         <img className="" src="images/inactive-fav.png" alt="favorite" width={"32px"} title="Add to favorites" /> 
     ); 
 }
+/* Displays all the movie matches along with sorting functionality*/
 const MovieMatches = (props) => {
     const matchesData = props.matches.sort((a,b) => String(a.title).localeCompare(String(b.title)));
     if (matchesData.length > 0){
@@ -244,7 +248,7 @@ const MovieMatches = (props) => {
         )
     }
 }
-
+/* Table headers are contained here. */
 const TableHead = ({columns, sortColumnOrder}) => {
     const [sortAttribute, setSortAttribute] = useState("title");
     const [sortOrder, setSortOrder] = useState("ascending"); // true -> asc, false -> desc
@@ -258,7 +262,7 @@ const TableHead = ({columns, sortColumnOrder}) => {
         <thead className='bg-violet-300 border-b-2 border-gray-200'>
             <tr>
                 {columns.map((column) => column.sortable ? 
-                <th key={column.id} className="p-4 text-md font-bold tracking-tight hover:cursor-pointer text-left" id={column.id} onClick={() => changeColumnOrder(column.id)}> {column.name} <span className='inline-flex flex-col ml-2'> <span>▲ </span> <span>▼ </span></span> </th> : 
+                <th key={column.id} className="p-4 text-md font-bold tracking-tight hover:cursor-pointer text-left" id={column.id} onClick={() => changeColumnOrder(column.id)}title="Sort Functionality Coming Soon!"> {column.name}</th> : 
                 <th key={column.id} className="p-4 text-md font-bold text-left" id={column.id}> {column.name} </th>)}
             </tr>
         </thead>
@@ -266,6 +270,7 @@ const TableHead = ({columns, sortColumnOrder}) => {
 }
 
 // --------------------------------------------------------------- FAVORITES SECTION ------------------------------------------------------------------------------------------
+/* Contains the logic and display of a favorite list item*/
 const FavoriteListItem = (props) => {
     const posterPath = `https://image.tmdb.org/t/p/w185${props.poster}`;
     const movieTitle = props.title;
@@ -273,20 +278,21 @@ const FavoriteListItem = (props) => {
         <ul className='w-[225px] px-6 py-3 bg-slate-100 border border-gray-200 rounded-lg shadow h-max mb-6'>
             <li className='mb-5 text-lg font-semibold text-gray-900'> #{props.favIndex + 1}. {movieTitle} </li>
             <li className='relative'> 
-                <img className="shadow border border-gray-200 rounded-sm" src={posterPath} alt="movie poster" />
+                <Link to="/details"> <img className="shadow border border-gray-200 rounded-sm cursor-pointer" title='View Movie Details' src={posterPath} alt="movie poster" onClick={() => props.setMovieDetails(props.movieData)}/> </Link>
                 <img src={"images/red-x-icon.png"} width={"30px"} className='absolute top-1 right-1 font-extrabold text-red-500 text-3xl shadow-lg z-10 hover:cursor-pointer' title="Remove From Favorites" onClick={() => props.removeFavorite(props.id)} /> 
             </li>
         </ul>
     );
 }
+/* Contains the list of favorite movies */
 const Favorites = (props) => {
     const favorites = props.favoriteMovies;
     const displayState = props.favoritesIsShown ? "block" : "hidden";
     if (favorites.length > 0){
         return (
-            <div className={`${displayState} basis-1/5 h-overflow-y-scroll max-h-[70vh]`}>
+            <div className={`${displayState} basis-1/5 overflow-y-scroll max-h-[90vh] w-full`}>
                 <h2 className='mb-2 text-2xl font-bold tracking-tight text-gray-900'> Favorite Movies </h2>
-                {favorites.map( (movie, index) => <FavoriteListItem key={movie.id} id={movie.id} poster={movie.poster} title={movie.title} removeFavorite={props.removeFavoriteMovie} favIndex={index} />)}
+                {favorites.map( (movie, index) => <FavoriteListItem key={movie.id} id={movie.id} poster={movie.poster} title={movie.title} removeFavorite={props.removeFavoriteMovie} favIndex={index} setMovieDetails={props.setMovieDetails} movieData={movie} />)}
             </div>
         );
     }
@@ -295,6 +301,7 @@ const Favorites = (props) => {
     }
 }
 // ======================================================== HIDE / DISPLAY SECTION =============================================================
+/* Component responsible for showing / hiding the filters and favorites section */
 const ShowSection = ({direction, section, setSectionDisplay, id}) => {
     if (direction === true){
         return (

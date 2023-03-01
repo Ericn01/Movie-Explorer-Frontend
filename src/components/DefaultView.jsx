@@ -217,8 +217,7 @@ const MovieMatches = (props) => {
         return(
             <section className='mx-8'>
                 <h2> {`${matchesData.length} Matches Found!`} </h2>
-                <div className='max-h-[49rem] overflow-y-scroll rounded-md shadow-md
-                '>
+                <div className='max-h-[49rem] overflow-y-scroll rounded-md shadow-md'>
                 <table className="table-auto w-full basis-1/2"> 
                     <TableHead columns={[{name: "Poster", id:"poster", sortable:false}, {name: "Title", id:"title", sortable:true}, {name: "Release Year", id:"release-year", sortable:true}, {name: "Average Rating", id:"average-rating", sortable:true}, {name: "Popularity", id:"popularity", sortable:true}, {name:"Favorites", id:"favorite", sortable:false}, {name: "Details", id:"details", sortable:false}]} sortColumnOrder={sortMovieColumns} /> 
                     <tbody className="divide-y divide-gray-300">
@@ -264,10 +263,11 @@ const FavoriteListItem = (props) => {
     const posterPath = `https://image.tmdb.org/t/p/w185${props.poster}`;
     const movieTitle = props.title;
     return(
-        <ul className='relative'>
-            <li> {movieTitle} </li>
-            <li> <img src={"src/assets/red-x-icon.png"} width={"24px"} className='absolute top-7 right-1 font-extrabold text-red-500 text-3xl shadow-lg z-10 hover:cursor-pointer' title="Remove From Favorites" onClick={() => props.removeFavorite(props.id)} /> 
-                <img src={posterPath} alt="movie poster" />
+        <ul className='min-w px-6 py-3 bg-slate-100 border border-gray-200 rounded-lg shadow h-max mb-6'>
+            <li className='mb-5 text-lg font-semibold text-gray-900 tracking-tight'> #{props.favIndex + 1}. {movieTitle} </li>
+            <li className='relative'> 
+                <img className="shadow border border-gray-200 rounded-sm" src={posterPath} alt="movie poster" />
+                <img src={"src/assets/red-x-icon.png"} width={"32px"} className='absolute top-1 right-5 font-extrabold text-red-500 text-3xl shadow-lg z-10 hover:cursor-pointer' title="Remove From Favorites" onClick={() => props.removeFavorite(props.id)} /> 
             </li>
         </ul>
     );
@@ -277,9 +277,9 @@ const Favorites = (props) => {
     const displayState = props.favoritesIsShown ? "block" : "hidden";
     if (favorites.length > 0){
         return (
-            <div className={`${displayState} basis-1/4`}>
-                <h2> Favorite Movies </h2>
-                {favorites.map( (movie) => <FavoriteListItem key={movie.id} id={movie.id} poster={movie.poster} title={movie.title} removeFavorite={props.removeFavoriteMovie} />)}
+            <div className={`${displayState} basis-1/5 h-overflow-y-scroll`}>
+                <h2 className='mb-2 text-2xl font-bold tracking-tight text-gray-900'> Favorite Movies </h2>
+                {favorites.map( (movie, index) => <FavoriteListItem key={movie.id} id={movie.id} poster={movie.poster} title={movie.title} removeFavorite={props.removeFavoriteMovie} favIndex={index} />)}
             </div>
         );
     }

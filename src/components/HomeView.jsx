@@ -23,7 +23,10 @@ const HomeView = ({movieData, setParentMovieMatches}) => {
             '> Find All of Your Favorite Movies! </h3>
                 <div className="flex-auto my-7"> 
                     <div className='relative'>
-                        <input type="text" id="movie-input" name="movie-input" autoComplete='false' placeholder="Enter a movie title..." className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 " onChange={(e) => setMovieNameInput(e.target.value)}></input>
+                        <div className="absolute top-2 left-2">
+                            <img src="src/assets/search.png" width={"24px"} draggable={false}/>
+                        </div>
+                        <input type="text" id="movie-input" name="movie-input" autoComplete={"off"} placeholder="Enter a movie title..." className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 " onChange={(e) => setMovieNameInput(e.target.value)}></input>
                     </div>
                 </div>
                 <div className="flex-auto my-5 justify-items-evenly"> 

@@ -35,20 +35,20 @@ function App() {
     setMovieDetails(movie);
   }
   // Genres list setup
-  const [genres, setGenres] = useState(JSON.parse(localStorage.getItem("genres")));
-  function getGenresList(movies){
+  let genres = JSON.parse(localStorage.getItem("genres"));
+  async function getGenresList(movieData){
     let genres = new Map();
-    movies.map((m) => { 
+    movieData.map((m) => { 
       const genreObject = m.details.genres;
       if (genreObject !== null){
         genreObject.forEach( (genreEntry) => {
           const genreIsSet = genres.has(genreEntry.id);
           genreIsSet === false ? genres.set(genreEntry.id, genreEntry.name) : ""}
-          )
+        )
       }
     });
-    setGenres(Object.fromEntries(genres));
     localStorage.setItem("genres", JSON.stringify(Object.fromEntries(genres)));
+    return genres;
   }
   // Data endpoint URL
   const movieDataURL = "https://www.randyconnolly.com/funwebdev/3rd/api/movie/movies-brief.php?limit=200";
@@ -60,10 +60,10 @@ function App() {
         const data = await request.json();
         setMovies(data);
         localStorage.setItem("movieData", JSON.stringify(data));
+        genres = getGenresList(data);
       }
       const movieData = localStorage.getItem("movieData");
       movieData === null ? getMovieData() : setMovies(JSON.parse(movieData)); // local storage existence vs not existing
-      genres === undefined ? getGenresList(movies) : getGenresList(JSON.parse(movieData)); 
     }, []);
   return (
   <main>

@@ -111,9 +111,9 @@ const ActionButtons = ({favoriteMovies, addFavorite, movieData}) => {
     const isFavoriteMovie = favoriteMovies.includes(movieData);
     if (!isFavoriteMovie){
         return (
-            <div>
-                <button className="text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-blue-400 hover:bg-blue-600" onClick={() => addFavorite(movieData)}> Add To Favorites </button>
-                <Link to="/default"> <button className='text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-red-400 hover:bg-red-600'> Close  </button> </Link>
+            <div className='flex justify-start mt-3'>
+                <button className="w-[140px] text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-blue-500 hover:bg-blue-700" onClick={() => addFavorite(movieData)}> Add To Favorites </button>
+                <Link to="/default"> <button className='w-[80px] ml-5 text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-red-500 hover:bg-red-700'> Close  </button> </Link>
             </div> 
         );
     } else{
@@ -128,8 +128,8 @@ const ActionButtons = ({favoriteMovies, addFavorite, movieData}) => {
 
 const UserRating = () => {
     const [userRating, setUserRating] = useState(new Array(10).fill(0));
-    function setRating(){
-        const inputValue = e.target.value;
+    function setRating(e){
+        const inputValue = Number(e.target.value);
         const rating = inputValue != "" ? Number(e.target.value) : 0;
         setUserRating(rating);
     }
@@ -138,12 +138,13 @@ const UserRating = () => {
     }
     return (
         <section className='basis-1/6 rounded-lg overflow-hidden shadow-lg p-5 bg-slate-100 border-2 border-gray-200 hover:bg-slate-200 hover:border-gray-300'>
-            <div className='flex justify-evenly'>
-                <h2 className='font-semibold'> User Rating: </h2>
-                <input className={"w-[100px] h-[30px] border border-gray-500 px-3 py-1 rounded-lg shadow-md focus:outline-none focus:border-orange-400 mb-3"} type="number" max={10} min={0} onChange={setRating} placeholder={`${Math.ceil(Math.random() * 10)}.${Math.round(Math.random() * 10),0}`} />
+            <div className='flex'>
+                <h2 className='tracking-tight'> User Rating: </h2>
+                <input className={"w-[75px] h-[25px] ml-3 border border-gray-500 px-3 py-1 rounded-lg shadow-md focus:outline-none focus:border-orange-400 mb-3"} type="number" max={10} min={0} onChange={setRating} placeholder={`${Math.ceil(Math.random() * 10)}.${Math.round(Math.random() * 10),0}`} />
             </div>
-                <button className='text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-red-600 hover:bg-red-800' onClick={() => setRating()}> Change Rating </button>
-            
+            <div className='flex justify-start my-2'>
+                <button className='w-[50%] text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-violet-600 hover:bg-violet-800' onClick={() => setRating()}> Change Rating </button>
+            </div>
             <div className="flex">
                 {userRating.map((indexRating, index) => <StarImage key={index} imageIndex={index} indexRating={indexRating} />)}
             </div>

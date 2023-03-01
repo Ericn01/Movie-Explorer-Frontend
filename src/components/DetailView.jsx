@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Header  from './Header';
+
 const DetailView = ({movieRequest, favorites, addFavorite}) => {
     const backdropURL = `https://image.tmdb.org/t/p/original${movieRequest.backdrop}`;
     if (movieRequest !== null) {
         return (
-            <section className={`flex justify-evenly bg-cover bg-no-repeat bg-[url(${backdropURL})] items-center m-10`}>
+        <div>
+            <Header />
+            <section className={`flex bg-cover bg-no-repeat bg-[url(${backdropURL})] items-center m-10`}>
                 <PosterImage posterPath={movieRequest.poster} />
                 <MovieDetails movieData={movieRequest}/>
                 <div>
@@ -14,6 +18,7 @@ const DetailView = ({movieRequest, favorites, addFavorite}) => {
                 </div>
                 <UserRating />
             </section>
+        </div>
         )
     }
     else {
@@ -27,8 +32,8 @@ const PosterImage = ({posterPath}) => {
         alert("image click");
     }
     return (
-        <div className="cursor-pointer hover:shadow-xl mt-10 h-max min-h-[100%]">
-            <img className="min-w-full" src={largePosterImage} width={"400px"} alt="Movie Poster" draggable="false" onClick={handleImageClick} />
+        <div className="cursor-pointer hover:shadow-xl h-max basis-1/5">
+            <img className="min-w-full rounded-lg" src={largePosterImage} alt="Movie Poster" draggable="false" onClick={handleImageClick} />
         </div>
     );
 }
@@ -39,7 +44,7 @@ const PosterImage = ({posterPath}) => {
  */
 const MovieDetails = ({movieData}) => {
     return (
-        <div className="px-5 py-3 ml-5">
+        <div className="mx-8 basis-1/3 rounded-lg overflow-hidden shadow-lg p-5 bg-slate-100 border-2 border-gray-200 hover:bg-slate-200 hover:border-gray-300">
             <HeaderDetails movieData={movieData} />
             <OtherDetails movieData={movieData} />
         </div>
@@ -48,13 +53,13 @@ const MovieDetails = ({movieData}) => {
 const HeaderDetails = ({movieData}) => {
     return(
         <div>
-            <h2 className="text-3xl font-bold pb-3"> {movieData.title} ({movieData.release_date.substring(0,4)})</h2>
-            <ul className="flex list-none justify-start"> 
-                <li className='my-4'> {movieData.release_date.replaceAll("-", "/")} </li>
-                {movieData.details.genres.map((genreObj) => <li className="ml-3 inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-600" key={genreObj.id}>
+            <h2 className="text-2xl font-bold"> {movieData.title} ({movieData.release_date.substring(0,4)})</h2>
+            <ul className="flex list-none justify-start items-center"> 
+                <li className='my-4 text-sm font-semibold tracking-wide'> {movieData.release_date.replaceAll("-", "/")} </li>
+                {movieData.details.genres.map((genreObj) => <li className="ml-3 inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-600 h-min" key={genreObj.id}>
                     {genreObj.name} 
                 </li>)}
-                <li className="ml-3 my-4"> {movieData.runtime} Minutes </li>
+                <li className="ml-3 my-4 text-sm font-semibold tracking-wide"> {minutesToHours(movieData.runtime)} </li>
             </ul>
         </div>
     );
@@ -72,7 +77,7 @@ const OtherDetails = ({movieData}) => {
             </div>
             <div> 
                 <h3 className={"text-lg font-semibold mb-2"}> Description </h3>
-                <p className='text-sm'> {movieData.details.overview} </p>
+                <p className='text-md'> {movieData.details.overview} </p>
             </div>
         </div>
     )
@@ -86,16 +91,16 @@ const PerformanceDetails = ({movieData}) => {
     const ratingDetails = movieData.ratings;
     const movieRevenue = new Intl.NumberFormat('en-us', {style: 'currency', currency: "USD"}).format(movieData.revenue);
     return (
-        <div> 
-            <h3 className='text-md font-semibold'> Performance Details </h3>
+        <div className='basis-1/3 rounded-lg overflow-hidden shadow-lg p-5 bg-slate-100 border-2 border-gray-200 hover:bg-slate-200 hover:border-gray-300 mr-10'> 
+            <h3 className='text-xl font-semibold '> Performance Details </h3>
             <article>
-                <p> Revenue: {movieRevenue}</p>
-                <p> Average Rating: {ratingDetails.average}</p>
-                <p> Number of ratings: {ratingDetails.count} </p>
-                <p> Popularity: {Math.round(ratingDetails.popularity, 1)}%</p>  
+                <p className='py-2'> Revenue: {movieRevenue}</p>
+                <p className='py-2'> Average Rating: {ratingDetails.average}</p>
+                <p className='py-2'> Number of ratings: {ratingDetails.count} </p>
+                <p className='py-2'> Popularity: {Math.round(ratingDetails.popularity, 1)}%</p>  
             </article>     
         </div>
-    )
+    );
 }
 /**
  * Container that allows the user to add a song to favorites, or close out of the detail view.
@@ -104,12 +109,21 @@ const PerformanceDetails = ({movieData}) => {
  */
 const ActionButtons = ({favoriteMovies, addFavorite, movieData}) => {
     const isFavoriteMovie = favoriteMovies.includes(movieData);
-    return (
-        <div className="">
-            <button onClick={() => addFavorite(movieData)} disabled={isFavoriteMovie}> Add To Favorites </button>
-            <button> <Link to="/default"> Close </Link> </button>
-        </div>
-    );
+    if (!isFavoriteMovie){
+        return (
+            <div>
+                <button className="text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-blue-400 hover:bg-blue-600" onClick={() => addFavorite(movieData)}> Add To Favorites </button>
+                <Link to="/default"> <button className='text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-red-400 hover:bg-red-600'> Close  </button> </Link>
+            </div> 
+        );
+    } else{
+        return (
+            <div>
+                <button className="text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-blue-400 opacity-50" onClick={() => addFavorite(movieData)} disabled={true} > Add To Favorites </button>
+                <Link to="/default"> <button className='text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-red-400 hover:bg-red-600'> Close  </button> </Link>
+            </div> 
+        );
+    }
 }
 
 const UserRating = () => {
@@ -123,12 +137,13 @@ const UserRating = () => {
 
     }
     return (
-        <section>
-            <h2> User Rating: </h2>
-            <div>
-                <input type="number" value={0} max={10} min={0} onChange={setRating} />
-                <button onClick={() => setRating()}> Change Rating </button>
+        <section className='basis-1/6 rounded-lg overflow-hidden shadow-lg p-5 bg-slate-100 border-2 border-gray-200 hover:bg-slate-200 hover:border-gray-300'>
+            <div className='flex justify-evenly'>
+                <h2 className='font-semibold'> User Rating: </h2>
+                <input className={"w-[100px] h-[30px] border border-gray-500 px-3 py-1 rounded-lg shadow-md focus:outline-none focus:border-orange-400 mb-3"} type="number" max={10} min={0} onChange={setRating} placeholder={`${Math.ceil(Math.random() * 10)}.${Math.round(Math.random() * 10),0}`} />
             </div>
+                <button className='text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-red-600 hover:bg-red-800' onClick={() => setRating()}> Change Rating </button>
+            
             <div className="flex">
                 {userRating.map((indexRating, index) => <StarImage key={index} imageIndex={index} indexRating={indexRating} />)}
             </div>
@@ -148,5 +163,9 @@ function makeArrayBasedOnRating(rating){
     }
     return baseArray;
 }
-
+function minutesToHours(duration) {
+    const hours = Math.floor(duration / 60);
+    const minutes = duration % 60;
+    return `${hours}h ${minutes}m`
+}
 export default DetailView;

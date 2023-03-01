@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import DefaultView from './components/DefaultView';
 import HomeView from './components/HomeView';
 import DetailView from './components/DetailView';
-import Header from './components/Header';
 import { Route, Routes } from 'react-router-dom';
 
 // Application component
@@ -68,7 +67,6 @@ function App() {
     }, []);
   return (
   <main>
-    <Header />
     <Routes>
       <Route path="/" element={<HomeView movieData={movies} setParentMovieMatches={setMatches}/>} />
       <Route path="/default" element={<DefaultView homeMatches={movieMatches} favorites={favoriteMovies} addFavorite={addFavoriteMovie} movieDetails={requestMovieDetails} genres={genres} setParentMovieMatches={setMatches} movieData={movies} removeFavoriteMovie={removeFavoriteMovie}/>} />

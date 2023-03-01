@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Header from './Header';
+
 const DefaultView = ({homeMatches, favorites, addFavorite, movieDetails, genres, setParentMovieMatches, movieData, removeFavoriteMovie}) => {
     const [filterIsShown, setFilterIsShown] = useState(true);
     const [favoritesIsShown, setFavoriteIsShown] = useState(true);
@@ -14,13 +16,16 @@ const DefaultView = ({homeMatches, favorites, addFavorite, movieDetails, genres,
         }
     }
     return (
-        <section className="flex justify-around m-10">
-            <MovieFilter genresList={genres} movieData={movieData} setFilterResults={setParentMovieMatches} filterIsShown={filterIsShown}/>
-            <ShowSection direction={leftSideArrowDirection} section={"filter"} setSectionDisplay={setSectionDisplay} id={"left"}/>
-            <MovieMatches matches={homeMatches} favoriteMovies={favorites} addFavorite={addFavorite} setMovieDetails={movieDetails} setSortedMatches={setParentMovieMatches} />
-            <ShowSection direction={rightSideArrowDirection} section={'favorites'} setSectionDisplay={setSectionDisplay} id={"right"}/>
-            <Favorites favoriteMovies={favorites} removeFavoriteMovie={removeFavoriteMovie} favoritesIsShown={favoritesIsShown} />
-        </section>
+        <div>
+            <Header />
+            <section className="flex justify-between m-10">
+                <MovieFilter genresList={genres} movieData={movieData} setFilterResults={setParentMovieMatches} filterIsShown={filterIsShown}/>
+                <ShowSection direction={leftSideArrowDirection} section={"filter"} setSectionDisplay={setSectionDisplay} id={"left"}/>
+                <MovieMatches matches={homeMatches} favoriteMovies={favorites} addFavorite={addFavorite} setMovieDetails={movieDetails} setSortedMatches={setParentMovieMatches} />
+                <ShowSection direction={rightSideArrowDirection} section={'favorites'} setSectionDisplay={setSectionDisplay} id={"right"}/>
+                <Favorites favoriteMovies={favorites} removeFavoriteMovie={removeFavoriteMovie} favoritesIsShown={favoritesIsShown} />
+            </section>
+        </div>
     );
 }
 
@@ -216,8 +221,8 @@ const MovieMatches = (props) => {
         }
         return(
             <section className='mx-8'>
-                <h2> {`${matchesData.length} Matches Found!`} </h2>
-                <div className='max-h-[49rem] overflow-y-scroll rounded-md shadow-md'>
+                <div className='max-h-[85vh] overflow-y-scroll rounded-md shadow-md'>
+                <h2 className='text-center text-lg tracking-tighter font-semibold mb-2 text-gray-700'> {` We Found ${matchesData.length} Matches! `} </h2>
                 <table className="table-auto w-full basis-1/2"> 
                     <TableHead columns={[{name: "Poster", id:"poster", sortable:false}, {name: "Title", id:"title", sortable:true}, {name: "Release Year", id:"release-year", sortable:true}, {name: "Average Rating", id:"average-rating", sortable:true}, {name: "Popularity", id:"popularity", sortable:true}, {name:"Favorites", id:"favorite", sortable:false}, {name: "Details", id:"details", sortable:false}]} sortColumnOrder={sortMovieColumns} /> 
                     <tbody className="divide-y divide-gray-300">
@@ -231,8 +236,10 @@ const MovieMatches = (props) => {
     else {
         return (
             <div>
-                <h1> No Results Were Found... Sorry! </h1>
-                <img src="https://thumbs.dreamstime.com/b/very-sad-american-shorthair-cat-shaded-silvers-tabby-portrait-very-sad-american-shorthair-cat-shaded-silvers-tabby-portrait-close-139233557.jpg" width={"300px"}/>
+                <h1 className='text-gray-900 text-2xl text-center mt-5 font-bold'> No Results Were Found... Try Searching Again</h1>
+                <div>
+                    <img className='mt-12 rounded-lg shadow-2xl w-max' src="https://media.istockphoto.com/id/916159418/photo/cute-kitten-portrait-british-shorthair-cat.jpg?s=612x612&w=0&k=20&c=Fxeq0syWLxQ_iZgxe2rSy-1l-tQxtDVGkE-0N02gF98="/>
+                </div>
             </div>
         )
     }
@@ -251,8 +258,8 @@ const TableHead = ({columns, sortColumnOrder}) => {
         <thead className='bg-violet-300 border-b-2 border-gray-200'>
             <tr>
                 {columns.map((column) => column.sortable ? 
-                <th key={column.id} className="p-4 text-md font-bold tracking-wide hover:cursor-pointer text-left" id={column.id} onClick={() => changeColumnOrder(column.id)}> {column.name} <span>▲ ▼</span> </th> : 
-                <th key={column.id} className="p-4 text-md font-bold tracking-wide text-left" id={column.id}> {column.name} </th>)}
+                <th key={column.id} className="p-4 text-md font-bold tracking-tight hover:cursor-pointer text-left" id={column.id} onClick={() => changeColumnOrder(column.id)}> {column.name} <span className='inline-flex flex-col ml-2'> <span>▲ </span> <span>▼ </span></span> </th> : 
+                <th key={column.id} className="p-4 text-md font-bold text-left" id={column.id}> {column.name} </th>)}
             </tr>
         </thead>
     );
@@ -263,11 +270,11 @@ const FavoriteListItem = (props) => {
     const posterPath = `https://image.tmdb.org/t/p/w185${props.poster}`;
     const movieTitle = props.title;
     return(
-        <ul className='min-w px-6 py-3 bg-slate-100 border border-gray-200 rounded-lg shadow h-max mb-6'>
-            <li className='mb-5 text-lg font-semibold text-gray-900 tracking-tight'> #{props.favIndex + 1}. {movieTitle} </li>
+        <ul className='w-[225px] px-6 py-3 bg-slate-100 border border-gray-200 rounded-lg shadow h-max mb-6'>
+            <li className='mb-5 text-lg font-semibold text-gray-900'> #{props.favIndex + 1}. {movieTitle} </li>
             <li className='relative'> 
                 <img className="shadow border border-gray-200 rounded-sm" src={posterPath} alt="movie poster" />
-                <img src={"src/assets/red-x-icon.png"} width={"32px"} className='absolute top-1 right-5 font-extrabold text-red-500 text-3xl shadow-lg z-10 hover:cursor-pointer' title="Remove From Favorites" onClick={() => props.removeFavorite(props.id)} /> 
+                <img src={"src/assets/red-x-icon.png"} width={"30px"} className='absolute top-1 right-1 font-extrabold text-red-500 text-3xl shadow-lg z-10 hover:cursor-pointer' title="Remove From Favorites" onClick={() => props.removeFavorite(props.id)} /> 
             </li>
         </ul>
     );
@@ -277,7 +284,7 @@ const Favorites = (props) => {
     const displayState = props.favoritesIsShown ? "block" : "hidden";
     if (favorites.length > 0){
         return (
-            <div className={`${displayState} basis-1/5 h-overflow-y-scroll`}>
+            <div className={`${displayState} basis-1/5 h-overflow-y-scroll max-h-[70vh]`}>
                 <h2 className='mb-2 text-2xl font-bold tracking-tight text-gray-900'> Favorite Movies </h2>
                 {favorites.map( (movie, index) => <FavoriteListItem key={movie.id} id={movie.id} poster={movie.poster} title={movie.title} removeFavorite={props.removeFavoriteMovie} favIndex={index} />)}
             </div>
@@ -292,14 +299,14 @@ const ShowSection = ({direction, section, setSectionDisplay, id}) => {
     if (direction === true){
         return (
             <div className='flex align-center mr-5'>
-                <img src="src/assets/arrow-right.svg" width={"54px"} className='cursor-pointer flex-none' onClick={() => setSectionDisplay(section, id)}/>
+                <img src="src/assets/arrow-right.svg" className='cursor-pointer flex-none w-[45px]' onClick={() => setSectionDisplay(section, id)}/>
             </div>
         );
     }
     else if (direction === false){
         return (
             <div className='flex align-center ml-5'>
-                <img src="src/assets/arrow-left.svg" width={"54px"} className='cursor-pointer flex-none' onClick={() => setSectionDisplay(section, id)}/>
+                <img src="src/assets/arrow-left.svg" className='cursor-pointer flex-none w-[45px]' onClick={() => setSectionDisplay(section, id)}/>
             </div>
         );
     }

@@ -184,11 +184,11 @@ const MovieRow = (props) => {
 const FavoriteMovie = ({isFavorite}) => {
     if (isFavorite){
         return  (
-            <img src="src/assets/active-fav.png" alt="favorite" width={"32px"} /> 
+            <img src="src/images/active-fav.png" alt="favorite" width={"32px"} /> 
         );
     }
     return(            
-        <img className="" src="src/assets/inactive-fav.png" alt="favorite" width={"32px"} title="Add to favorites" /> 
+        <img className="" src="src/images/inactive-fav.png" alt="favorite" width={"32px"} title="Add to favorites" /> 
     ); 
 }
 const MovieMatches = (props) => {
@@ -274,7 +274,7 @@ const FavoriteListItem = (props) => {
             <li className='mb-5 text-lg font-semibold text-gray-900'> #{props.favIndex + 1}. {movieTitle} </li>
             <li className='relative'> 
                 <img className="shadow border border-gray-200 rounded-sm" src={posterPath} alt="movie poster" />
-                <img src={"src/assets/red-x-icon.png"} width={"30px"} className='absolute top-1 right-1 font-extrabold text-red-500 text-3xl shadow-lg z-10 hover:cursor-pointer' title="Remove From Favorites" onClick={() => props.removeFavorite(props.id)} /> 
+                <img src={"src/images/red-x-icon.png"} width={"30px"} className='absolute top-1 right-1 font-extrabold text-red-500 text-3xl shadow-lg z-10 hover:cursor-pointer' title="Remove From Favorites" onClick={() => props.removeFavorite(props.id)} /> 
             </li>
         </ul>
     );
@@ -299,14 +299,14 @@ const ShowSection = ({direction, section, setSectionDisplay, id}) => {
     if (direction === true){
         return (
             <div className='flex align-center mr-5'>
-                <img src="src/assets/arrow-right.svg" className='cursor-pointer flex-none w-[45px]' onClick={() => setSectionDisplay(section, id)}/>
+                <img src="src/images/arrow-right.svg" className='cursor-pointer flex-none w-[45px]' onClick={() => setSectionDisplay(section, id)}/>
             </div>
         );
     }
     else if (direction === false){
         return (
             <div className='flex align-center ml-5'>
-                <img src="src/assets/arrow-left.svg" className='cursor-pointer flex-none w-[45px]' onClick={() => setSectionDisplay(section, id)}/>
+                <img src="src/images/arrow-left.svg" className='cursor-pointer flex-none w-[45px]' onClick={() => setSectionDisplay(section, id)}/>
             </div>
         );
     }

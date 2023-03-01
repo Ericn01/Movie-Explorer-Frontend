@@ -118,9 +118,9 @@ const ActionButtons = ({favoriteMovies, addFavorite, movieData}) => {
         );
     } else{
         return (
-            <div>
-                <button className="text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-blue-400 opacity-50" onClick={() => addFavorite(movieData)} disabled={true} > Add To Favorites </button>
-                <Link to="/default"> <button className='text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-red-400 hover:bg-red-600'> Close  </button> </Link>
+            <div className='flex justify-start mt-3'>
+                <button className="w-[140px] text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-blue-400 opacity-50 line-through" onClick={() => addFavorite(movieData)} disabled={true} title="Already Favorited" > Add To Favorites </button>
+                <Link to="/default"> <button className='w-[80px] ml-5 text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-red-400 hover:bg-red-600'> Close  </button> </Link>
             </div> 
         );
     }
@@ -139,10 +139,10 @@ const UserRating = () => {
     return (
         <section className='basis-1/6 rounded-lg overflow-hidden shadow-lg p-5 bg-slate-100 border-2 border-gray-200 hover:bg-slate-200 hover:border-gray-300'>
             <div className='flex'>
-                <h2 className='tracking-tight'> User Rating: </h2>
+                <h2 className='tracking-tight font-semibold'> User Rating: </h2>
                 <input className={"w-[75px] h-[25px] ml-3 border border-gray-500 px-3 py-1 rounded-lg shadow-md focus:outline-none focus:border-orange-400 mb-3"} type="number" max={10} min={0} onChange={setRating} placeholder={`${Math.ceil(Math.random() * 10)}.${Math.round(Math.random() * 10),0}`} />
             </div>
-            <div className='flex justify-start my-2'>
+            <div className='flex justify-start mt-2 mb-5'>
                 <button className='w-[50%] text-white font-semibold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-violet-600 hover:bg-violet-800' onClick={() => setRating()}> Change Rating </button>
             </div>
             <div className="flex">
@@ -153,7 +153,7 @@ const UserRating = () => {
 }
 const StarImage =  ({indexRating}) => {
     return (
-        <img className="hover:cursor-pointer" src={`src/assets/star-${indexRating}.svg`} width={"26px"} draggable={false}/>
+        <img className="hover:cursor-pointer" src={`src/images/star-${indexRating}.svg`} width={"26px"} draggable={false}/>
     )
 }
 

@@ -4,6 +4,7 @@ import HomeView from './components/HomeView';
 import DetailView from './components/DetailView';
 import { Route, Routes } from 'react-router-dom';
 import ModalDialog from './components/ModalDialog';
+import { baseUrl } from './constants';
 
 // Application component
 function App() {
@@ -41,28 +42,28 @@ function App() {
     setMovieDetails(movie);
   }
   // Genres list setup
-  let genres = JSON.parse(localStorage.getItem("genres"));
-  async function getGenresList(movieData){
-    let genres = new Map();
-    movieData.map((m) => { 
-      const genreObject = m.details.genres;
-      if (genreObject !== null){
-        genreObject.forEach( (genreEntry) => {
-          const genreIsSet = genres.has(genreEntry.id);
-          genreIsSet === false ? genres.set(genreEntry.id, genreEntry.name) : ""}
-        )
-      }
-    });
-    localStorage.setItem("genres", JSON.stringify(Object.fromEntries(genres)));
-    return genres;
-  }
-  // Data endpoint URL
-  const movieDataURL = "https://www.randyconnolly.com/funwebdev/3rd/api/movie/movies-brief.php?limit=200";
+  let genres = JSON.parse(localStorage.getItem("genres")) || getGenresList(movies);
+async function getGenresList(movieData){
+  const genres = movieData.reduce((acc, m) => {
+    const genreObject = m.details.genres;
+    if (genreObject !== null) {
+      genreObject.forEach(genreEntry => {
+        if (!acc.has(genreEntry.id)) {
+          acc.set(genreEntry.id, genreEntry.name);
+        }
+      });
+    }
+    return acc; // accumulates genres as it goes through the movie list
+  }, new Map());
+  localStorage.setItem("genres", JSON.stringify(Object.fromEntries(genres)));
+  return genres;
+} 
+  // Setting up a variable for the loading 
   // Check the movie data 
   useEffect( () => 
     {
       async function getMovieData() {
-        const request = await fetch(movieDataURL);
+        const request = await fetch(baseUrl);
         const data = await request.json();
         setMovies(data);
         localStorage.setItem("movieData", JSON.stringify(data));
@@ -78,7 +79,7 @@ function App() {
       setModalState(newViewState);
     }
   return (
-  <main className='relative'>
+  <main className='relative font-poppins'>
     <ModalDialog changeDisplayState={changeModalView} displayState={modalState} />
     <Routes>
       <Route path="/" element={<HomeView movieData={movies} setParentMovieMatches={setMatches}/>} />

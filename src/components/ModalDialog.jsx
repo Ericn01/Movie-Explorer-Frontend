@@ -13,15 +13,16 @@ const ModalDialog = ({displayState, changeDisplayState}) =>{
                         This website was created by Eric Nielsen for the COMP4513 (Web Development III) Course at Mount Royal University.
                     </p>
                     <p className="text-base leading-relaxed text-gray-500">
-                        Date Deployed: March 1, 2023
+                        Date Deployed: April 4, 2023
                     </p>
                     <p className="text-base leading-relaxed text-gray-500">
-                        Programming Logic and UI was built using ReactJS, styling with TailwindCSS, and content display with HTML.
+                        Frontend programming Logic and UI was built using ReactJS, styling with TailwindCSS, and content display with HTML.
+                        The backend / server side was built using NodeJS, express and MongoDB for document retrieval and user authentication. 
                         <br></br>
-                        This project is being hosted via Netlify.
+                        This project (both the frontend and backend) are hosted on render.com
                     </p>
                     <p className="text-base leading-relaxed text-blue-500 hover:underline">
-                        <a href="https://github.com/Ericn01/Movie-Explorer"> GitHub Repository Link </a>
+                        <a href="https://github.com/Ericn01/Movie-Explorer-Full-Version"> GitHub Repository Link </a>
                     </p>
                 </div>
                 <div className="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">

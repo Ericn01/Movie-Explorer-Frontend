@@ -39,9 +39,9 @@ const DefaultView = ({homeMatches, favorites, addFavorite, movieDetails, genres,
         <div>
             <Header setModalView={setModalView}/>
             <section className="flex justify-between m-12">
-                <MovieFilter genresList={genres} setFilterResults={setParentMovieMatches} filterIsShown={filterIsShown} changeColumnOrder={changeColumnOrder} />
+                <MovieFilter genresList={genres} setFilterResults={setParentMovieMatches} filterIsShown={filterIsShown} />
                 <ShowSection direction={leftSideArrowDirection} section={"filter"} setSectionDisplay={setSectionDisplay} id={"left"} isHidingContent={leftIsHidingContent}/>
-                <MovieMatches matches={homeMatches} favoriteMovies={favorites} addFavorite={addFavorite} setMovieDetails={movieDetails} setSortedMatches={setParentMovieMatches} />
+                <MovieMatches matches={homeMatches} favoriteMovies={favorites} addFavorite={addFavorite} setMovieDetails={movieDetails} setSortedMatches={setParentMovieMatches} changeColumnOrder={changeColumnOrder}/>
                 <ShowSection direction={rightSideArrowDirection} section={'favorites'} setSectionDisplay={setSectionDisplay} id={"right"} isHidingContent={rightIsHidingContent}/>
                 <Favorites favoriteMovies={favorites} removeFavoriteMovie={removeFavoriteMovie} favoritesIsShown={favoritesIsShown} setMovieDetails={movieDetails} />
             </section>
@@ -58,8 +58,7 @@ const fetchFilterData = async (endpoint) => {
 }
 // -------------------------------------------------------------- FILTERS SECTION ---------------------------------------------------------------------------------------------
 /* The Movie filter allows the user to display certain results depending on their search criteria */
-const MovieFilter = ({genresList, setFilterResults, filterIsShown, changeColumnOrder}) => {
-    
+const MovieFilter = ({genresList, setFilterResults, filterIsShown}) => {
         const [checkedFilter, setCheckedFilter] = useState("");
         const [lessGreaterBetweenFilter, setLessGreaterBetweenFilter] = useState(""); // Holds the radio values for the less and greater than buttons
         const [formData, setFormData] = useState({
@@ -141,8 +140,8 @@ const MovieFilter = ({genresList, setFilterResults, filterIsShown, changeColumnO
                 <TripleValueFilterContainer name={"rating"} checkRadio={checkRadio} checkInputData={handleFormChange} formData={formData} setSubFilter={lessGreaterBetweenFilterSelection}/>
                 <RetrieveNumMoviesFilter checkRadio={checkRadio} checkInputData={handleFormChange} formData={formData} />
                 <div className="w-full flex justify-evenly mt-4"> 
-                    <button className="w-[135px] text-white font-medium flex justify-center p-2 border rounded-md shadow-sm text-sm bg-violet-500 hover:bg-violet-700" onClick={filterMovies}> Filter </button>
-                    <button className="w-[135px] text-white font-medium flex justify-center p-2 border  rounded-md shadow-sm text-sm bg-red-500 hover:bg-red-700" onClick={() => setFormData({title: "",genre: "",yearLess: "",yearGreater: "",ratingLess: "",ratingGreater: "", yearLowerBound: "", yearUpperBound: "", ratingUpperBound: "", ratingLowerBound: ""})} > Clear </button>
+                    <button className="w-[135px] text-white font-bold flex justify-center p-2 border rounded-md shadow-sm text-sm bg-violet-500 hover:bg-violet-700" onClick={filterMovies}> Filter </button>
+                    <button className="w-[135px] text-white font-bold flex justify-center p-2 border  rounded-md shadow-sm text-sm bg-red-500 hover:bg-red-700" onClick={() => setFormData({title: "",genre: "",yearLess: "",yearGreater: "",ratingLess: "",ratingGreater: "", yearLowerBound: "", yearUpperBound: "", ratingUpperBound: "", ratingLowerBound: ""})} > Clear </button>
                 </div>
             </section>
         );
@@ -154,7 +153,7 @@ const TitleFilterContainer = (props) => {
         <div className="my-8 mb-3 font-normal text-gray-700 dark:text-gray-400">
             <input type="radio" value={props.name} name="filter-select" onChange={props.checkRadio} />
             <label htmlFor={`${props.name}-input`} className="text-sm font-medium text-gray-800 uppercase mr-4"> {props.name} </label>
-            <input type="text" className={"w-[200px] border border-gray-500 px-3 py-1 text-gray-900 rounded-lg shadow-md focus:outline-none focus:border-orange-400"} onChange={props.checkInputData} name={props.name} value={props.formData.title}/>
+            <input type="text" className={"w-[175px] border border-gray-500 px-3 py-1 text-gray-900 rounded-lg shadow-md ml-[15px] focus:outline-none focus:border-orange-400"} onChange={props.checkInputData} name={props.name} value={props.formData.title}/>
         </div>
     );
 }
@@ -165,7 +164,7 @@ const GenreFilterContainer = (props) => {
         <div className="my-8 font-normal text-gray-700 dark:text-gray-400">
             <input type="radio" value={props.name} name="filter-select" onChange={props.checkRadio}/>
             <label htmlFor={`${props.name}-input`} className="text-sm font-medium text-gray-800 uppercase mr-2"> {props.name} </label>
-            <select type="text" className={"w-[200px] border border-gray-500 text-gray-900 px-3 py-1 rounded-lg shadow-md focus:outline-none focus:border-orange-400"} onChange={props.checkInputData} name={props.name} value={props.formData.genre}>
+            <select type="text" className={"w-[175px] border border-gray-500 text-gray-900 px-3 py-1 rounded-lg shadow-md ml-[12px] focus:outline-none focus:border-orange-400"} onChange={props.checkInputData} name={props.name} value={props.formData.genre}>
                 {genreEntries.map( (genreObj) => <option key={genreObj[0]} value={genreObj[1]}> {genreObj[1]} </option>)}
             </select>
         </div>
@@ -182,23 +181,23 @@ const TripleValueFilterContainer = (props) => {
                 <aside className="ml-10">
                     <div className='flex mt-3'>
                         <input type="radio" value={isYearInput ?"year-less-select" : "rating-less-select"} name={isYearInput ?"year-less-greater-between-select" : "rating-less-greater-between-select"} onChange={props.setSubFilter}/>
-                        <label htmlFor={`less-input`} className="text-sm font-medium text-gray-800 ml-2 mr-10"> Less </label>
-                        <input type="number" className="w-[85px] border border-gray-400 px-3 rounded-lg shadow-md focus:outline-none " onChange={props.checkInputData} name={isYearInput ? `yearLess` : `ratingLess`}
+                        <label htmlFor={`less-input`} className="text-sm font-medium text-gray-800 ml-2 mt-1"> Less </label>
+                        <input type="number" className="w-[95px] border border-gray-400 px-3 rounded-lg shadow-md focus:outline-none ml-[44px]" onChange={props.checkInputData} name={isYearInput ? `yearLess` : `ratingLess`}
                         value={isYearInput ? props.formData.yearLess : props.formData.ratingLess} />
                     </div>
                     <div className='flex mt-3'>
                         <input type="radio"  value={isYearInput ?  "year-greater-select" : "rating-greater-select"} name={isYearInput ? "year-less-greater-between-select" : "rating-less-greater-between-select"} onChange={props.setSubFilter} />
-                        <label htmlFor={`greater-input`} className="text-sm font-medium text-gray-800 ml-2 mr-4"> Greater </label>
-                        <input type="number"  className="w-[85px] border border-gray-400 px-3 rounded-lg shadow-md focus:outline-none" onChange={props.checkInputData} name={isYearInput ? `yearGreater` : `ratingGreater`} value={isYearInput ? props.formData.yearGreater : props.formData.ratingGreater} /> 
+                        <label htmlFor={`greater-input`} className="text-sm font-medium text-gray-800 ml-2 mt-1"> Greater </label>
+                        <input type="number"  className="w-[95px] border border-gray-400 px-3 rounded-lg shadow-md focus:outline-none ml-[20px]" onChange={props.checkInputData} name={isYearInput ? `yearGreater` : `ratingGreater`} value={isYearInput ? props.formData.yearGreater : props.formData.ratingGreater} /> 
                     </div>
                     <div className='flex mt-3'> 
                         <input type="radio"  value={isYearInput ?  "year-between-select" : "rating-between-select"} name={isYearInput ? "year-less-greater-between-select" : "rating-less-greater-between-select"} onChange={props.setSubFilter} />
-                        <label htmlFor={`between-input`} className="text-sm font-medium text-gray-800 ml-2 mr-4"> Between </label>
+                        <label htmlFor={`between-input`} className="text-sm font-medium text-gray-800 ml-2 mt-1"> Between </label>
                         <div className='flex justify-between'>
                             <div>
-                                <input type="number"  className="w-[95px] border border-gray-400 px-3 rounded-lg shadow-md focus:outline-none" onChange={props.checkInputData} name={isYearInput ? `yearLowerBound` : `ratingLowerBound`} value={isYearInput ? props.formData.yearLowerBound : props.formData.ratingLowerBound} /> 
+                                <input type="number"  className="w-[95px] border border-gray-400 px-3 rounded-lg shadow-md focus:outline-none ml-[12.5px]" onChange={props.checkInputData} name={isYearInput ? `yearLowerBound` : `ratingLowerBound`} value={isYearInput ? props.formData.yearLowerBound : props.formData.ratingLowerBound} /> 
                             </div>
-                            <span className='mx-2 text-black' > - </span>
+                            <span className='mx-2 text-black mt-1 font-bold' > - </span>
                             <div className=''>
                                 <input type="number"  className="w-[95px] border border-gray-400 px-3 rounded-lg shadow-md focus:outline-none" onChange={props.checkInputData} name={isYearInput ? `yearUpperBound` : `ratingUpperBound`} value={isYearInput ? props.formData.yearUpperBound : props.formData.ratingUpperBound} /> 
                             </div>
@@ -215,12 +214,12 @@ const RetrieveNumMoviesFilter = (props) => {
             <div className="my-8 font-normal text-gray-700 dark:text-gray-400">
                 <input type="radio" name="filter-select" value='movie-retrieval-select' onChange={props.checkRadio}/>
                 <span className="text-sm font-medium text-gray-800 uppercase"> Number of Movies </span>
-                <aside className="ml-10 flex">
+                <aside className="ml-10 flex mt-3">
                     <span className='mr-3 text-gray-600 font-semibold'> 1 </span>
                     <input className='w-[50%] h-[20px]' title={retrievalValue} type="range" max={150} min={1} name="numMoviesRetrieved" value={retrievalValue} onChange={props.checkInputData} />
                     <span className='ml-3 text-gray-600 font-semibold'> 150 </span>
                 </aside>
-                <div className='text-sm italic mt-2 flex justify-center mr-[65px]'> 
+                <div className='text-sm italic mt-1 flex justify-center mr-[70px]'> 
                     First {retrievalValue ? retrievalValue : "{n}"} Movies
                 </div>
             </div>
@@ -241,12 +240,12 @@ const MovieRow = (props) => {
             <Link to="/details"> <img src={posterPath}/> </Link> </td>
             <td className="px-3 text-[16px] font-semibold text-blue-600 hover:cursor-pointer hover:underline" onClick={() => props.setMovieDetails(props.movieData)}> 
             <Link to="/details"> {props.movieData.title} </Link> </td>
-            <td className="px-3" > {releaseYear} </td>
-            <td className="px-3"> {ratings.average.toPrecision(2)} </td>
-            <td className="px-3"> {Math.round(ratings.popularity)}% </td>
-            <td className="px-3"> <button onClick={() => props.addFavorite(props.movieData)}> <FavoriteMovie isFavorite={isFavorite} /> </button> </td>
-            <td className="px-3"> <button className="text-green-800 text-sm font-semibold bg-green-300 rounded-lg py-1 px-2 uppercase" onClick={() => props.setMovieDetails(props.movieData)}> 
-            <Link to="/details"> View </Link> </button> </td>
+                <td className="px-3" > {releaseYear} </td>
+                <td className="px-3"> {ratings.average.toPrecision(2)} </td>
+                <td className="px-3"> {Math.round(ratings.popularity)}% </td>
+                <td className="px-3"> <button onClick={() => props.addFavorite(props.movieData)}> <FavoriteMovie isFavorite={isFavorite} /> </button> </td>
+                <td className="px-3"> <button className="text-green-800 text-sm font-semibold bg-green-300 hover:bg-green-400 hover:shadow-sm rounded-lg py-1 px-2 uppercase" onClick={() => props.setMovieDetails(props.movieData)}> 
+                <Link to="/details"> View </Link> </button> </td>
         </tr>
     )
 }
@@ -263,7 +262,7 @@ const FavoriteMovie = ({isFavorite}) => {
 }
 /* Displays all the movie matches along with sorting functionality*/
 const MovieMatches = (props) => {
-    const matchesData = props.matches.sort((a,b) => String(a.title).localeCompare(String(b.title)));
+    const matchesData = props.matches;
     if (matchesData.length > 0){
         function sortMovieColumns(sortingAttribute, sortingOrder){
             // creates a new ref for the array, as for react to re-render we need to create a new array, or else the reference will be the exact same
@@ -291,9 +290,9 @@ const MovieMatches = (props) => {
         }
         return(
             <section className='mx-8'>
-                <div className='max-h-[85vh] overflow-y-scroll rounded-md shadow-md'>
+                <div className='max-h-[85vh] overflow-y-scroll rounded-md shadow-md scrollbar-hide'>
                 <h2 className='text-center text-lg tracking-tighter font-semibold mb-2 text-gray-700'> {` We Found ${matchesData.length} Matches! `} </h2>
-                <table className="w-full basis-1/2 table-fixed max-w-[1000px]"> 
+                <table className="w-full basis-1/2 table-fixed max-w-[1100px]"> 
                     <TableHead columns={
                         [
                             {name: "Poster", id:"poster", sortable:false}, 
@@ -303,7 +302,7 @@ const MovieMatches = (props) => {
                             {name: "Popularity", id:"popularity", sortable:true}, 
                             {name:"Favorites", id:"favorite", sortable:false}, 
                             {name: "Details", id:"details", sortable:false}
-                        ]} sortColumnOrder={sortMovieColumns} /> 
+                        ]} sortMovieColumns={sortMovieColumns} /> 
                     <tbody className="divide-y divide-gray-300">
                         {matchesData.map ( (m, index) => <MovieRow key={m.id} movieData={m} i={index} favorites={props.favoriteMovies} addFavorite={props.addFavorite} setMovieDetails={props.setMovieDetails} /> )}
                     </tbody>
@@ -324,16 +323,15 @@ const MovieMatches = (props) => {
     }
 }
 /* Table headers are contained here. */
-const TableHead = ({columns, sortColumnOrder}) => {  
-    const pixelDiscrepancyByAttribute = {'title': 60, 'year': 60, 'rating': 90, 'popularity': 110}
-    return (
+const TableHead = ({columns, sortMovieColumns}) => {  
+    return ( 
         <thead className='bg-violet-300 border-b-2 border-gray-200'>
             <tr>
                 {columns.map((column) => column.sortable ? 
-                <th key={column.id} className="p-4 text-md font-bold tracking-tight hover:cursor-pointer text-left relative mr-2" id={column.id} onClick={() => changeColumnOrder(column.id)} title="Sort Functionality Coming Soon!"> {column.name} 
-                    <span className={`flex-col absolute  bottom-1 m-auto`}> 
-                        <div> ▲ </div>  
-                        <div> ▼ </div>  
+                <th key={column.id} className="p-4 text-md font-bold tracking-tight text-left relative" id={column.id}> {column.name} 
+                    <span className={`flex-col absolute  bottom-1 ml-[10px]`}> 
+                        <div className='cursor-pointer hover:text-orange-400' onClick={() => sortMovieColumns(column.id, "ascending")} title={`Sort ${column.id} in ascending order`}> ▲ </div>  
+                        <div className='cursor-pointer hover:text-orange-400' onClick={() => sortMovieColumns(column.id, "descending")} title={`Sort ${column.id} in descending order`}> ▼ </div>  
                     </span> 
                 </th> : 
                 <th key={column.id} className="p-4 text-md font-bold text-left" id={column.id}> {column.name} </th>)}
@@ -348,11 +346,11 @@ const FavoriteListItem = (props) => {
     const posterPath = `https://image.tmdb.org/t/p/w185${props.poster}`;
     const movieTitle = props.title;
     return(
-        <ul className='w-[250px] px-6 py-3 bg-slate-100 border border-gray-200 rounded-lg shadow h-max mb-6'>
-            <li className='mb-5 text-lg font-semibold text-gray-900'> #{props.favIndex + 1}. {movieTitle} </li>
+        <ul className='w-[250px] px-6 py-3 bg-slate-100 border border-gray-200 rounded-lg shadow h-max mb-6 '>
+            <li className='mb-5 text-lg font-semibold text-gray-900 text-center'> {props.favIndex + 1}. {movieTitle} </li>
             <li className='relative'> 
-                <Link to="/details"> <img className="shadow border border-gray-200 rounded-sm cursor-pointer" title='View Movie Details' src={posterPath} alt="movie poster" onClick={() => props.setMovieDetails(props.movieData)}/> </Link>
-                <img src={"images/red-x-icon.png"} width={"30px"} className='absolute top-1 right-1 font-extrabold text-red-500 text-3xl shadow-lg z-10 hover:cursor-pointer' title="Remove From Favorites" onClick={() => props.removeFavorite(props.id)} /> 
+                <Link to="/details"> <img className="shadow border border-gray-200 rounded-sm cursor-pointer ml-2" title='View Movie Details' src={posterPath} alt="movie poster" onClick={() => props.setMovieDetails(props.movieData)}/> </Link>
+                <img src={"images/red-x-icon.png"} width={"30px"} className='absolute top-1 right-4 font-extrabold text-red-500 text-3xl shadow-lg z-10 hover:cursor-pointer' title="Remove From Favorites" onClick={() => props.removeFavorite(props.id)} /> 
             </li>
         </ul>
     );
@@ -363,14 +361,14 @@ const Favorites = (props) => {
     const displayState = props.favoritesIsShown ? "block" : "hidden";
     if (favorites.length > 0){
         return (
-            <div className={`${displayState} basis-1/5 overflow-y-scroll max-h-[90vh] w-full`}>
-                <h2 className='mb-2 text-2xl font-bold tracking-tight text-gray-900'> Favorite Movies </h2>
+            <div className={`${displayState} basis-1/5 overflow-y-scroll max-h-[90vh] w-full bg-slate-200 p-5 shadow-md rounded-md`}>
+                <h2 className='mb-4 text-2xl font-bold tracking-tight text-gray-900'> Favorite Movies </h2>
                 {favorites.map( (movie, index) => <FavoriteListItem key={movie.id} id={movie.id} poster={movie.poster} title={movie.title} removeFavorite={props.removeFavoriteMovie} favIndex={index} setMovieDetails={props.setMovieDetails} movieData={movie} />)}
             </div>
         );
     }
     else {
-        return ( <h1 className={`${displayState}`}> No Favorites Movies Set!</h1>);
+        return ( <h1 className={`${displayState} bg-slate-100 border border-gray-200 p-5 rounded-md text-center text-2xl text-gray-900 tracking-tight font-bold`}> Favorite Movies </h1>);
     }
 }
 // ======================================================== HIDE / DISPLAY SECTION =============================================================
@@ -378,8 +376,8 @@ const Favorites = (props) => {
 const ShowSection = ({direction, section, setSectionDisplay, id, isHidingContent}) => {
     if (direction === true && isHidingContent){
         return (
-            <IconContext.Provider value={{size: '45px', cursor: 'pointer'}}>
-                <div className='flex align-center mr-5'>
+            <IconContext.Provider value={{size: '50px', cursor: 'pointer'}}>
+                <div className='align-center mr-5 mt-[20%]'>
                     <BsArrowRightCircleFill onClick={() => setSectionDisplay(section, id)} />
                 </div>
             </IconContext.Provider>
@@ -387,8 +385,8 @@ const ShowSection = ({direction, section, setSectionDisplay, id, isHidingContent
     }
     else if (direction === true && !isHidingContent){
         return (
-            <IconContext.Provider value={{size: '45px', cursor: 'pointer'}}>
-                <div className='flex align-center mr-5'>
+            <IconContext.Provider value={{size: '50px', cursor: 'pointer'}}>
+                <div className='align-center mr-5 mt-[20%]'>
                     <BsArrowRightCircle onClick={() => setSectionDisplay(section, id)} />
                 </div>
             </IconContext.Provider>
@@ -396,8 +394,8 @@ const ShowSection = ({direction, section, setSectionDisplay, id, isHidingContent
     }
     else if (direction === false && isHidingContent){
         return (
-            <IconContext.Provider value={{size: '45px', cursor: 'pointer'}}>
-                <div className='flex align-center ml-5'>
+            <IconContext.Provider value={{size: '50px', cursor: 'pointer'}}>
+                <div className='flex align-center ml-5 mt-[20%]'>
                     <BsArrowLeftCircleFill onClick={() => setSectionDisplay(section, id)}/>
                 </div>
             </IconContext.Provider>
@@ -405,8 +403,8 @@ const ShowSection = ({direction, section, setSectionDisplay, id, isHidingContent
     }
     else if (direction === false && !isHidingContent){
         return (
-        <IconContext.Provider value={{size: '45px', cursor: 'pointer'}}>
-                <div className='flex align-center ml-5'>
+        <IconContext.Provider value={{size: '50px', cursor: 'pointer'}}>
+                <div className='flex align-center ml-5 mt-[20%]'>
                     <BsArrowLeftCircle onClick={() => setSectionDisplay(section, id)}/>
                 </div>
             </IconContext.Provider>

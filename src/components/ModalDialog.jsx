@@ -9,18 +9,27 @@ const ModalDialog = ({displayState, changeDisplayState}) =>{
             <hr></hr>
             <div className="">
                 <div className="p-6 space-y-6">
-                    <p className="text-base leading-relaxed text-gray-500">
+                    <p className="text-gray-500">
                         This website was created by Eric Nielsen for the COMP4513 (Web Development III) Course at Mount Royal University.
                     </p>
-                    <p className="text-base leading-relaxed text-gray-500">
-                        Date Deployed: April 4, 2023
+                    <h3 className="font-bold tracking-tight uppercase"> Deployment Date </h3>
+                    <p className="text-gray-500">
+                        April 4, 2023.
                     </p>
-                    <p className="text-base leading-relaxed text-gray-500">
-                        Frontend programming Logic and UI was built using ReactJS, styling with TailwindCSS, and content display with HTML.
-                        The backend / server side was built using NodeJS, express and MongoDB for document retrieval and user authentication. 
-                        <br></br>
-                        This project (both the frontend and backend) are hosted on render.com
-                    </p>
+                    <div className="text-gray-500">
+                        <h3 className="font-bold tracking-tight uppercase border-black"> Frontend </h3>
+                        <p>
+                            Frontend programming Logic and UI was built using ReactJS, styling with TailwindCSS, and content display with HTML.
+                        </p>
+                        <h3 className="font-bold tracking-tight uppercase border-black py-2"> Backend </h3>
+                        <p>
+                            The backend / server side was built using NodeJS, express and MongoDB for document retrieval and user authentication. 
+                        </p>
+                        <h3 className="font-bold tracking-tight uppercase border-black py-2"> Hosting </h3>
+                        <p>
+                            This project (both the frontend and backend) are hosted on render.com
+                        </p>
+                    </div>
                     <p className="text-base leading-relaxed text-blue-500 hover:underline">
                         <a href="https://github.com/Ericn01/Movie-Explorer-Full-Version"> GitHub Repository Link </a>
                     </p>
